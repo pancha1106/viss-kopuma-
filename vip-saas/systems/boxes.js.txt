@@ -1,0 +1,14 @@
+async function spawn(channel) {
+
+    const msg = await channel.send("📦 Mystery Box spawned!");
+
+    const filter = m => !m.author.bot;
+
+    channel.awaitMessages({ filter, max: 1, time: 15000 })
+        .then(collected => {
+            const user = collected.first().author;
+            channel.send(`🎁 Winner: ${user.username}`);
+        });
+}
+
+module.exports = { spawn };

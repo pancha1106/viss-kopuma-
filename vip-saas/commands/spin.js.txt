@@ -1,0 +1,11 @@
+const { spin } = require("../systems/economy");
+
+module.exports = {
+    name: "spin",
+    run: async (msg) => {
+
+        const reward = spin(msg.author.id);
+
+        msg.reply(`🎰 You won **${reward} coins**`);
+    }
+};

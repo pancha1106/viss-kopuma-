@@ -1,0 +1,16 @@
+module.exports = {
+    name shop,
+    run async (msg) = {
+
+        msg.channel.send(`
+🛒 SHOP
+
+!buy vip bronze
+!buy vip silver
+!buy vip gold
+
+💎 !buy diamond
+🎟 !buy ticket
+        `);
+    }
+};

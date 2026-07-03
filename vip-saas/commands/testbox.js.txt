@@ -1,0 +1,11 @@
+const { spawn } = require("../systems/boxes");
+
+module.exports = {
+    name: "testbox",
+    run: async (msg) => {
+
+        spawn(msg.channel);
+
+        msg.reply("📦 Box spawned!");
+    }
+};

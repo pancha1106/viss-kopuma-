@@ -1,0 +1,24 @@
+const users = new Map();
+
+function getUser(id) {
+    if (!users.has(id)) {
+        users.set(id, {
+            coins: 0,
+            diamonds: 0,
+            xp: 0,
+            vip: "none"
+        });
+    }
+    return users.get(id);
+}
+
+function spin(id) {
+    const u = getUser(id);
+
+    const reward = Math.floor(Math.random() * 1000 + 1);
+    u.coins += reward;
+
+    return reward;
+}
+
+module.exports = { getUser, spin };

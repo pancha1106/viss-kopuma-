@@ -1,0 +1,17 @@
+const express = require("express");
+const app = express();
+
+app.post("/stripe-webhook", (req,res) => {
+
+    const event = req.body;
+
+    if (event.type === "checkout.session.completed") {
+        const discordId = event.data.object.metadata.discordId;
+
+        console.log("👑 VIP GIVEN TO:", discordId);
+    }
+
+    res.sendStatus(200);
+});
+
+module.exports = app;
