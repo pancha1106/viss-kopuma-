@@ -1,0 +1,34 @@
+const activeBoxes = new Map();
+
+function startBox(channel) {
+
+    if (activeBoxes.has(channel.id)) return;
+
+    activeBoxes.set(channel.id, true);
+
+    channel.send("📦 **Mystery Box parādījās! Pirmais kas raksta !open laimē!**");
+
+    const collector = channel.createMessageCollector({
+        time: 15000
+    });
+
+    collector.on("collect", msg => {
+
+        if (msg.content === "!open") {
+
+            collector.stop();
+
+            const reward = Math.floor(Math.random() * 1000) + 100;
+
+            channel.send(`🎁 ${msg.author} laimēja 🪙 ${reward} coins!`);
+
+            activeBoxes.delete(channel.id);
+        }
+    });
+
+    collector.on("end", () => {
+        activeBoxes.delete(channel.id);
+    });
+}
+
+module.exports = { startBox };

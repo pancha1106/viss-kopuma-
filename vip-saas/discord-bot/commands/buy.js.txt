@@ -1,0 +1,61 @@
+const { getUser } = require("../systems/economy");
+
+module.exports = {
+    name: "buy",
+    run: async (msg, args) => {
+
+        const user = getUser(msg.author.id);
+
+        const item = args.slice(1).join(" ");
+
+        if (!item) return msg.reply("❌ norādi item");
+
+        // VIP
+        if (item === "vip bronze") {
+            if (user.coins < 2000) return msg.reply("❌ nav pietiekami coins");
+            user.coins -= 2000;
+            user.vip = "bronze";
+            return msg.reply("🥉 Tu nopirki BRONZE VIP!");
+        }
+
+        if (item === "vip silver") {
+            if (user.coins < 5000) return msg.reply("❌ nav pietiekami coins");
+            user.coins -= 5000;
+            user.vip = "silver";
+            return msg.reply("🥈 Tu nopirki SILVER VIP!");
+        }
+
+        if (item === "vip gold") {
+            if (user.coins < 10000) return msg.reply("❌ nav pietiekami coins");
+            user.coins -= 10000;
+            user.vip = "gold";
+            return msg.reply("🥇 Tu nopirki GOLD VIP!");
+        }
+
+        // DIAMONDS
+        if (item === "diamond") {
+            if (user.coins < 500) return msg.reply("❌ nav pietiekami coins");
+            user.coins -= 500;
+            user.diamonds += 1;
+            return msg.reply("💎 +1 diamond");
+        }
+
+        // COINS PACK
+        if (item === "coins") {
+            if (user.coins < 1000) return msg.reply("❌ nav pietiekami coins");
+            user.coins -= 1000;
+            user.coins += 500;
+            return msg.reply("🪙 +500 coins");
+        }
+
+        // TICKET
+        if (item === "ticket") {
+            if (user.coins < 1500) return msg.reply("❌ nav pietiekami coins");
+            user.coins -= 1500;
+            user.tickets = (user.tickets || 0) + 1;
+            return msg.reply("🎟 +1 ticket");
+        }
+
+        msg.reply("❌ item nav atrasts");
+    }
+};

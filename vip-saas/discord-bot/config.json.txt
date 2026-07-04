@@ -1,0 +1,7 @@
+{
+  "prefix": "!",
+  "currency": {
+    "coinName": "Coins",
+    "diamondName": "Diamonds"
+  }
+}
