@@ -1,0 +1,24 @@
+module.exports = {
+    name: "buyvip",
+    run: async (msg, args) => {
+
+        const tier = args[1];
+
+        if (!tier) return msg.reply("❌ izvēlies vip: bronze / silver / gold");
+
+        const prices = {
+            bronze: "2.99",
+            silver: "5.99",
+            gold: "9.99"
+        };
+
+        if (!prices[tier]) return msg.reply("❌ nepareizs tier");
+
+        const link = `https://www.paypal.com/checkoutnow?amount=${prices[tier]}`;
+
+        msg.reply(`💳 Pērc VIP (${tier}) šeit:
+👉 ${link}
+
+⚠ pēc apmaksas VIP aktivizēsies automātiski`);
+    }
+};

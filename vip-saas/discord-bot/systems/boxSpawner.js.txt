@@ -1,0 +1,24 @@
+const { startBox } = require("./boxes");
+
+const channels = []; // šeit ieliec channel ID
+
+function getRandomChannel(client) {
+    const ids = channels.length ? channels : client.channels.cache.map(c => c.id);
+    return ids[Math.floor(Math.random() * ids.length)];
+}
+
+function startSpawner(client) {
+
+    setInterval(async () => {
+
+        const channelId = getRandomChannel(client);
+        const channel = await client.channels.fetch(channelId).catch(() => null);
+
+        if (!channel) return;
+
+        startBox(channel);
+
+    }, 30 * 60 * 1000); // 30 min
+}
+
+module.exports = { startSpawner };

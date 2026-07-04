@@ -1,0 +1,23 @@
+module.exports = {
+    name: "shop",
+    run: async (msg) => {
+
+        msg.channel.send(`
+🛒 **SHOP**
+
+💰 VIP:
+!buy vip bronze - 2000 coins
+!buy vip silver - 5000 coins
+!buy vip gold - 10000 coins
+
+💎 ITEMS:
+!buy diamond 500 coins = +1 💎
+!buy coins 1000 coins = +500 🪙
+
+🎟 BONUS:
+!buy ticket = 1500 coins
+
+👉 izmanto: !buy <item>
+        `);
+    }
+};

@@ -1,0 +1,32 @@
+const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require("discord.js");
+
+module.exports = {
+    name: "!ticket",
+
+    execute(message) {
+
+        const embed = new EmbedBuilder()
+            .setTitle("🎫 VIP TICKET")
+            .setDescription("Izvēlies darbību")
+            .setColor("Gold");
+
+        const row = new ActionRowBuilder().addComponents(
+            new ButtonBuilder()
+                .setCustomId("design")
+                .setLabel("🎨 Dizaini")
+                .setStyle(ButtonStyle.Primary),
+
+            new ButtonBuilder()
+                .setCustomId("rank")
+                .setLabel("🏷️ Rank")
+                .setStyle(ButtonStyle.Success),
+
+            new ButtonBuilder()
+                .setCustomId("channel")
+                .setLabel("💎 Private Channel")
+                .setStyle(ButtonStyle.Secondary)
+        );
+
+        message.channel.send({ embeds: [embed], components: [row] });
+    }
+};
