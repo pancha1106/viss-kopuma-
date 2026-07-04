@@ -1,0 +1,32 @@
+const Database = require("better-sqlite3");
+const db = new Database("data.db");
+
+db.prepare(`
+CREATE TABLE IF NOT EXISTS users (
+  id TEXT PRIMARY KEY,
+  coins INTEGER DEFAULT 500,
+  xp INTEGER DEFAULT 0,
+  level INTEGER DEFAULT 1,
+  inventory TEXT DEFAULT '[]',
+  profile TEXT DEFAULT '{}'
+)
+`).run();
+
+function getUser(id) {
+  let u = db.prepare("SELECT * FROM users WHERE id=?").get(id);
+
+  if (!u) {
+    db.prepare("INSERT INTO users (id) VALUES (?)").run(id);
+    u = db.prepare("SELECT * FROM users WHERE id=?").get(id);
+  }
+
+  return u;
+}
+
+function saveUser(u) {
+  db.prepare(`
+    UPDATE users SET coins=?, xp=?, level=?, inventory=?, profile=? WHERE id=?
+  `).run(u.coins, u.xp, u.level, u.inventory, u.profile, u.id);
+}
+
+module.exports = { getUser, saveUser };

@@ -1,0 +1,69 @@
+const { createCanvas, loadImage } = require("canvas");
+const GIFEncoder = require("gifencoder");
+
+async function makeGif(user, discordUser) {
+
+  const w = 800, h = 300;
+
+  const encoder = new GIFEncoder(w, h);
+  encoder.start();
+  encoder.setRepeat(0);
+  encoder.setDelay(90);
+
+  const canvas = createCanvas(w, h);
+  const ctx = canvas.getContext("2d");
+
+  const avatar = await loadImage(
+    discordUser.displayAvatarURL({ extension: "png" })
+  );
+
+  const colors = ["#ff4d4d","#4da6ff","#4dff88","#b84dff"];
+
+  for (let f = 0; f < 15; f++) {
+
+    // 🌈 background animation
+    ctx.fillStyle = colors[f % colors.length];
+    ctx.fillRect(0,0,w,h);
+
+    // ✨ particles
+    for (let i = 0; i < 30; i++) {
+      ctx.fillStyle = "rgba(255,255,255,0.6)";
+      ctx.fillRect(Math.random()*w, Math.random()*h, 2, 2);
+    }
+
+    // 🔄 frame effect
+    ctx.strokeStyle = "#fff";
+    ctx.lineWidth = 6;
+    ctx.strokeRect(10,10,780,280);
+
+    // 👤 avatar
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(120,150,70,0,Math.PI*2);
+    ctx.clip();
+    ctx.drawImage(avatar, 50,80,140,140);
+    ctx.restore();
+
+    // 🔵 glow ring
+    ctx.strokeStyle = colors[f % colors.length];
+    ctx.beginPath();
+    ctx.arc(120,150,75,0,Math.PI*2);
+    ctx.stroke();
+
+    // 👤 text
+    ctx.fillStyle = "#fff";
+    ctx.font = "40px Arial";
+    ctx.fillText(discordUser.username, 220,120);
+
+    ctx.font = "25px Arial";
+    ctx.fillText(`Coins: ${user.coins}`,220,170);
+    ctx.fillText(`Level: ${user.level}`,220,210);
+
+    encoder.addFrame(ctx);
+  }
+
+  encoder.finish();
+  return encoder.out.getData();
+}
+
+module.exports = { makeGif };

@@ -1,0 +1,66 @@
+const { Client, GatewayIntentBits, AttachmentBuilder } = require("discord.js");
+const { getUser, saveUser } = require("./db");
+const { work } = require("./systems/economy");
+const { shop } = require("./systems/shop");
+const { roll } = require("./systems/crate");
+const { trades } = require("./systems/trade");
+const { makeGif } = require("./utils/profileGif");
+
+const client = new Client({
+  intents: [GatewayIntentBits.Guilds]
+});
+
+client.on("interactionCreate", async (i) => {
+
+  if (!i.isChatInputCommand() && !i.isButton()) return;
+
+  let user = getUser(i.user.id);
+
+  // 💼 WORK
+  if (i.commandName === "work") {
+    let earn = work(user);
+    saveUser(user);
+    return i.reply(`💼 +${earn} coins`);
+  }
+
+  // 🛒 SHOP
+  if (i.commandName === "shop") {
+    return i.reply({ content: "🛒 Shop", components: [shop()] });
+  }
+
+  // 🎁 CRATE
+  if (i.commandName === "crate") {
+    let reward = roll();
+
+    let inv = JSON.parse(user.inventory);
+    inv.push(reward);
+    user.inventory = JSON.stringify(inv);
+
+    saveUser(user);
+
+    await i.reply("🎁 Opening...");
+    setTimeout(() => i.editReply(`✨ You got: ${reward}`), 1500);
+  }
+
+  // 👤 PROFILE (GIF)
+  if (i.commandName === "profile") {
+    const gif = await makeGif(user, i.user);
+    return i.reply({ files: [new AttachmentBuilder(gif, { name: "profile.gif" })] });
+  }
+
+  // 🖱 BUTTONS
+  if (i.isButton()) {
+    let inv = JSON.parse(user.inventory);
+
+    if (i.customId === "buy_glow") inv.push("glow");
+    if (i.customId === "buy_frame") inv.push("frame");
+    if (i.customId === "buy_vip") inv.push("vip");
+
+    user.inventory = JSON.stringify(inv);
+    saveUser(user);
+
+    return i.reply({ content: "✅ Purchased!", ephemeral: true });
+  }
+});
+
+client.login("YOUR_TOKEN");
